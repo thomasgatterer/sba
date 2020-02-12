@@ -364,6 +364,7 @@
         $klasse = strtolower($klasse);
       }
       // Titel ändern, wenn UeW und wenn nicht in Schulbuchliste
+      $res = null;
       if ($uew) {
         $res = mysqli_query(self::$link, "SELECT * FROM liste WHERE Nr=$nr");
         if (! $res || mysqli_num_rows($res) === 0) {
@@ -390,9 +391,14 @@
         $res = mysqli_query(self::$link, $q);
         if (! $res || mysqli_num_rows($res) === 0) {
           $lastIndex = self::getLastID("lehrerhand") + 1;
-          $q = "INSERT INTO lehrerhand VALUES(" .
-            "$lastIndex, $nr, '$titel', '$fach', $letztesjahr, '$user')";
-          self::insert($q);
+          // prüfen, ob in Anhangliste -> kein Lehrerhandexemplar möglich
+          $q = "SELECT * FROM liste WHERE Nr=$nr AND Anhang='ja'";
+          $res = mysqli_query(self::$link, $q);
+          if (! $res || mysqli_num_rows($res) === 0) {
+            $q = "INSERT INTO lehrerhand VALUES(" .
+              "$lastIndex, $nr, '$titel', '$fach', $letztesjahr, '$user')";
+            self::insert($q);
+          }
         }
       }
     }
