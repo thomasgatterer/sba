@@ -1,0 +1,25 @@
+Anleitung für sba-Webinterface
+
+xampp installieren
+sba-files nach /opt/lampp/htdocs/ kopieren
+
+exportieren
+/opt/lampp/bin/mariadbdump -u USER -p sba2019 > <path>sba2019.sql
+
+importieren
+/opt/lampp/bin/mariadb -u USER -p sba2019 < <path>sba2019.sql
+
+/opt/lampp/bin/mariadb starten
+
+mariadb> CREATE USER 'lehrer'@'localhost' IDENTIFIED BY 'pw';
+
+mariadb> GRANT ALL PRIVILEGES ON sba2019.* TO 'lehrer'@'localhost';
+
+mariadb> use sba2019;
+mariadb> unlock tables;
+
+webinterface in browser starten:
+localhost/sba
+10.0.0.17/sba
+
+login -> eingabe
