@@ -7,10 +7,17 @@
 
   // change every year
   define ("YEARPREFIX", "20");
-  define ("ACTYEAR", "2020");
+  define ("ACTYEAR", "2019");
 
   // cookie
   define ("COOKIENAME", "sba");
+
+  // clients allowed
+  define ("ALLOWEDCLIENTS", array(
+    "127.0.0.1",
+    "10.1.10.4",
+    "10.1.10.6"
+  ));
 
   // Fach
   $FAECHER = array(

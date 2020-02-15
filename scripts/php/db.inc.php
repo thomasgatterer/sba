@@ -171,11 +171,7 @@
     */
     public function insert($insertString) {
       if (! self::$link) return null;
-      $ret = mysqli_query(self::$link, $insertString);
-      if (! $ret) {
-        return false;
-      }
-      return @mysqli_insert_id();
+      return mysqli_query(self::$link, $insertString);
     }
     /*
       function update
@@ -206,7 +202,8 @@
     */
     public function delete($deleteString) {
       if (! self::$link) return null;
-      return mysqli_query(self::$link, $deleteString);
+      mysqli_query(self::$link, $deleteString);
+      return (mysqli_affected_rows(self::$link));
     }
     /*
       function getNumRows
@@ -299,7 +296,7 @@
           $table .= "</tr>\n";
         }
       }
-      $table .= "</table>";
+      $table .= "</table>\n";
       print $table;
     }
 
@@ -333,74 +330,120 @@
           $table .= "</tr>\n";
         }
       }
-      $table .= "</table>";
+      $table .= "</table>\n";
       print $table;
     }
 
     function deleteTitle($user, $nr, $klasse, $lh) {
       if (! self::$link) return null;
       if (! $user) return null;
-      if (! $nr) return null;
-      if (! $klasse) return null;
-      $q = "DELETE FROM " . strtolower($klasse) . " WHERE Nr=$nr AND Lehrer='$user'";
-      self::delete($q);
-      if ($lh) {
-        $letztesjahr = ACTYEAR - 2000 - 1;
-        $q = "DELETE FROM lehrerhand WHERE Nr=$nr AND Lehrer='$user' AND Jahr=$letztesjahr";
-        $res1 = mysqli_query(self::$link, $q);
-      }
-    }
-
-    function insertTitle($user, $nr, $titel, $preis, $fach, $klasse, $lh, $uew) {
-      if (! self::$link) return null;
-      if (! $user) return null;
-      if (! $nr) return null;
-      if (! $titel) return null;
-      if (! $preis) return null;
-      if (! $fach && ! $lh) return null;
-      if (! $klasse && ! $lh) return null;
-      // Klasse -> lowercase
-      if ($klasse) {
-        $klasse = strtolower($klasse);
-      }
-      // Titel ändern, wenn UeW und wenn nicht in Schulbuchliste
-      $res = null;
-      if ($uew) {
-        $res = mysqli_query(self::$link, "SELECT * FROM liste WHERE Nr=$nr");
-        if (! $res || mysqli_num_rows($res) === 0) {
-          $titel = "UeW " . $titel;
+      if (! $nr) return "<p>Bitte Nummer eintragen.</p>\n";;
+      if ($klasse === "KEIN" && ($lh === false)) return "<p>Bitte Klasse eintragen.</p>\n";
+      $meldung = "";
+      if ($lh === false) {
+        $q = "DELETE FROM " . strtolower($klasse) . " WHERE Nr=$nr AND Lehrer='$user'";
+        $affected = self::delete($q);
+        if ($affected < 1) {
+          $meldung .= "<p>Der Datensatz konnte nicht gel&ouml;scht werden.</p>\n";
         }
       }
+      else {
+        $jahr = ACTYEAR - 2000;
+        $q = "DELETE FROM lehrerhand WHERE Nr=$nr AND Lehrer='$user' AND Jahr=$jahr";
+        $affected = self::delete($q);
+        if ($affected < 1) {
+          $meldung .= "<p>Fehler beim L&ouml;schen des Lehrerhandexemplars (LH).</p>\n";
+          $meldung .= "<p>Lehrerhandexemplare aus vergangenen Schuljahren " .
+            " wurden bereits erhalten und k&ouml;nnen nicht gel&ouml;scht werden.</p>\n";
+        }
+      }
+      if ($meldung === "") $meldung = null;
+      return $meldung;
+    }
+
+    function insertTitle($user, $nr, $titel, $preis, $fach, $klasse, $lh, $uew, $wv=0) {
+      if (! self::$link) return null;
+      if (! $user) return null;
+      if (! $nr) return "<p>Bitte Nummer eintragen.</p>\n";
+      if (! $titel) return "<p>Bitte Titel eintragen.</p>\n";;
+      if (! $preis) return "<p>Bitte Preis (mit Kommapunkt) eintragen.</p>\n";;
+      if (($fach === "KEIN") && ! $lh) return "<p>Bitte Fach eintragen.</p>\n";;
+      if (($klasse === "KEIN") && ! $lh) return "<p>Bitte Klasse eintragen.</p>\n";;
+      $meldung = "";
+      // Klasse -> lowercase
+      if ($klasse != "KEIN") {
+        $klasse = strtolower($klasse);
+      }
+      $preis = str_replace(",", ".", $preis); // Kommapunkt setzen
+      if (strpos($preis, ".") === false) $preis = $preis . ".0";
+      // ISBN-Nummer prüfen
+      if ($uew) {
+        if ((strlen($nr) != 10) || (strlen($nr) != 13)) {
+          // ToDo (ISBN evaluieren, für SBA nicht notwendig)
+        }
+        $titel = "UeW " . $titel;
+      }
       // alle Felder ausgefüllt -> einfügen in 1a .. 8d
-      if ($fach && $klasse) {
+      if ($fach && $klasse && ! $lh) {
         // bereits eingefügt? Wenn nicht, dann weiter
         $q = "SELECT * FROM $klasse WHERE Nr=$nr AND Lehrer='$user'";
-        $res = mysqli_query(self::$link, $q);
-        if (! $res || mysqli_num_rows($res) === 0) {
+        $res = self::queryOne($q);
+        if ($res) {
+          $meldung .= "<p>Der Titel</p><p>\"" . $res['Titel'] . "\"</p><p> ist bereits in der Klasse $klasse " .
+            "vorhanden und wird nicht eingef&uuml;gt.</p>\n";
+        }
+        else {
           $lastIndex = self::getLastID($klasse) + 1;
           $q = "INSERT INTO $klasse VALUES(" .
-            "$lastIndex, $nr, '$titel', $preis, '$fach', 0, '$user', 0, 0)";
-          self::insert($q);
+            "$lastIndex, $nr, '$titel', $preis, '$fach', 0, '$user', 0, $wv)";
+          $res = self::insert($q);
+          if (! $res) {
+            $meldung .= "<p>Fehler beim Einf&uuml;gen des Datensatzes.</p>\n";
+          }
         }
       }
       // einfügen als Lehrerhandexemplar
       if ($lh && $fach != "---") {
-        // prüfen, ob LH im letzten Schuljahr erhalten
+        // prüfen, ob LH im heurigen oder letzten Schuljahr erhalten
         $letztesjahr = ACTYEAR - 2000 - 1;
-        $q = "SELECT * FROM lehrerhand WHERE Nr=$nr AND Lehrer='$user' AND Jahr=$letztesjahr";
-        $res = mysqli_query(self::$link, $q);
-        if (! $res || mysqli_num_rows($res) === 0) {
+        $q = "SELECT * FROM lehrerhand WHERE Nr=$nr AND Lehrer='$user' AND Jahr>=$letztesjahr";
+        $res = self::queryOne($q);
+        if ($res) {
+          $meldung .= "<p>Der Titel wurde heuer oder im vergangenen Schuljahr " .
+            " bereits als Lehrerhandexemplar erhalten und wird nicht eingef&uuml;gt.</p>\n";
+        }
+        else {
           $lastIndex = self::getLastID("lehrerhand") + 1;
-          // prüfen, ob in Anhangliste -> kein Lehrerhandexemplar möglich
-          $q = "SELECT * FROM liste WHERE Nr=$nr AND Anhang='ja'";
-          $res = mysqli_query(self::$link, $q);
-          if (! $res || mysqli_num_rows($res) === 0) {
-            $q = "INSERT INTO lehrerhand VALUES(" .
-              "$lastIndex, $nr, '$titel', '$fach', $letztesjahr, '$user')";
-            self::insert($q);
+          $q = "SELECT * FROM liste WHERE Nr=$nr";
+          $res = self::queryOne($q);
+          if (! $res) {
+            $meldung .= "<p>Der Titel ist in der Schulbuchliste nicht enthalten. " .
+              "Von Unterrichtsmitteln eigener Wahl (UeW) k&ouml;nnen keine " .
+              "Lehrerhandexemplare angefordert werden.</p>\n";
+          }
+          else {
+            if ($res['Anhang'] === "ja") {
+              $meldung .= "<p>Von Titeln aus der Anhangliste k&ouml;nnen " .
+                "keine Lehrerhandexemplare bestellt werden.</p>\n";
+            }
+            else {
+              $q = "SELECT * FROM liste WHERE Nr=$nr";
+              $res = self::queryOne($q);
+              if ($res) {
+                $jahr = ACTYEAR - 2000;
+                $q = "INSERT INTO lehrerhand VALUES(" .
+                  "$lastIndex, $nr, '$titel', '$fach', $jahr, '$user')";
+                $res = self::insert($q);
+                if (! $res) {
+                  $meldung .= "<p>Fehler beim Einf&uuml;gen des Lehrerhandexemplars.</p>\n";
+                }
+              }
+            }
           }
         }
       }
+      if ($meldung === "") $meldung = null;
+      return $meldung;
     }
   }
 ?>

@@ -66,7 +66,7 @@
     print $f;
   }
 
-  function buildEingabeForm($header, $hiddenValue="") {
+  function buildEingabeForm($header, $hiddenValue="", $actKlasse="", $actFach="") {
     global $FAECHER;
     global $KLASSEN;
     $f = "<h1>$header</h1>\n";
@@ -75,16 +75,20 @@
     $f .= "<form action='eingabe.php' name='eingabeform' id='eingabeform' method='POST'>\n";
     $f .= "<input type='hidden' name='hiddenData' id='hiddenData' value='$hiddenValue'>\n";
     $f .= "<table>\n";
-    $f .= "<tr><td colspan='4' class='noborder'>";
+    $f .= "<tr><td colspan='3' class='noborder'>";
     $f .= "<label for='buchtitel'>Titel</label>\n";
     $f .= "<input type='text' name='buchtitel' id='buchtitel' maxlength='100' tabindex='1'>\n";
     $f .= "</td>";
     $f .= "<td class='noborder eingabe'>";
-    $f .= "<button type='submit' class='color-yellow' name='buttonPassword' id='buttonPassword' tabindex='16'>Passwort</button>";
+    $f .= "<button type='submit' class='color-yellow' name='buttonAnleitung' id='buttonAnleitung' tabindex='16'>Anleitung</button>";
     $f .= "</td>\n<td class='noborder eingabe'>";
-    $f .= "<button type='submit' class='color-red' name='buttonDelete' id='buttonDelete' tabindex='17'>L&ouml;schen</button>";
+    $f .= "<button type='submit' class='color-yellow' name='buttonPassword' id='buttonPassword' tabindex='17'>Passwort</button>";
     $f .= "</td>\n<td class='noborder eingabe'>";
-    $f .= "<button type='submit' class='color-green' name='buttonInsert' id='buttonInsert' tabindex='18'>Speichern</button>";
+    //$f .= "<button type='submit' class='color-red' name='buttonDelete' id='buttonDelete' tabindex='18'>L&ouml;schen</button>";
+    $f .= "<button type='button' class='color-red' name='buttonDelete' id='buttonDelete' " .
+      "onclick='showDeleteForm();' tabindex='18'>L&ouml;schen</button>";
+    $f .= "</td>\n<td class='noborder eingabe'>";
+    $f .= "<button type='submit' class='color-green' name='buttonInsert' id='buttonInsert' tabindex='19'>Speichern</button>";
     $f .= "</tr>\n";
     $f .= "<tr><td class='noborder eingabe'>";
     $f .= "<label for='buchnummer'>SbNr / ISBN</label><br />\n";
@@ -94,17 +98,17 @@
     $f .= "<input type='text' name='buchpreis' id='buchpreis' maxlength='30' tabindex='3'>\n";
     $f .= "</td><td class='noborder eingabe'>";
     $f .= "<label for='faecher'>Fach</label><br />\n";
-    $f .= populateOptionGroup("faecher");
+    $f .= populateOptionGroup("faecher", $actKlasse, $actFach);
     $f .= "</td><td class='noborder eingabe'>";
     $f .= "<label for='klassen'>Klasse</label><br />\n";
-    $f .= populateOptionGroup("klassen");
+    $f .= populateOptionGroup("klassen", $actKlasse, $actFach);
     $f .= "</td><td class='noborder eingabe'>";
     $f .= "<label for='wiederverwendung'>Wiederverwendung</label><br />\n";
     $f .= "<input type='text' name='wiederverwendung' id='wiederverwendung' maxlength='30' value='0' tabindex='6'>\n";
     $f .= "</td><td class='noborder eingabe'>";
-    $f .= "Handexemplar(LH)<br /><input type='checkbox' name='lehrerhand' id='lehrerhand' tabindex='7'>\n";
+    $f .= "Handexemplar(LH)<br /><input type='checkbox' name='lehrerhand' id='lehrerhand' value='cbLH' tabindex='7'>\n";
     $f .= "</td><td class='noborder eingabe'>";
-    $f .= "UeW<br /><input type='checkbox' name='uew' id='uew' tabindex='8'>\n";
+    $f .= "UeW<br /><input type='checkbox' name='uew' id='uew' value='cbUew' tabindex='8'>\n";
     $f .= "</td></tr>\n";
     $f .= "<tr><td class='noborder eingabe'>";
     $f .= "<button type='submit' class='color-blue' name='buttonBuchnummer' id='buttonBuchnummer' tabindex='9'>Nummer suchen</button>";
@@ -128,7 +132,40 @@
     print $f;
   }
 
-  function getOptionGroupFromDB($which, $res) {
+  function getMeldungForm($meldung=null) {
+    $f = "<div class='meldungform' name='meldungform' id='meldungform'>\n";
+    $f .= "<table class='meldungtable'>\n";
+    $f .= "<tr><th>Meldung</th></tr>\n";
+    $f .= "<tr><td class='meldungtext'>$meldung</td></tr>\n";
+    $f .= "<tr><td><p style='text-align: center;'>\n";
+    $f .= "<button type='button' class='color-green singlebutton' \n" .
+      "onclick='document.getElementById(\"meldungform\").style.visibility=\"hidden\"' \n" .
+      "name='buttonEingabe' id='buttonEingabe'>OK</button>\n";
+    $f .= "</p></td></tr>\n";
+    $f .= "</table>\n";
+    $f .= "</div>\n";
+    return $f;
+  }
+
+  function getDeleteForm() {
+    $f = "<div class='deleteform' name='deleteform' id='deleteform'>\n";
+    $f .= "<table class='meldungtable'>\n";
+    $f .= "<tr><th colspan=2>L&ouml;schen</th></tr>\n";
+    $f .= "<tr><td class='meldungtext' colspan=2>Soll der Datensatz gel&ouml;scht werden?</td></tr>\n";
+    $f .= "<tr><td style='width:50%; border:0'>\n";
+    $f .= "<p style='text-align: center;'><button type='button' class='color-green' \n" .
+      "onclick='deleteData();' \n" .
+      "name='buttonDeleteOK' id='buttonDeleteOK'>OK</button></p></td>\n";
+    $f .= "<td style='border:0;'><p style='text-align: center;'><button type='button' class='color-red' \n" .
+      "onclick='document.getElementById(\"deleteform\").style.visibility=\"hidden\"' \n" .
+      "name='buttonDeleteCancel' id='buttonDeleteCancel'>Abbrechen</button></p>\n";
+    $f .= "</td></tr>\n";
+    $f .= "</table>\n";
+    $f .= "</div>\n";
+    return $f;
+  }
+
+  function getOptionGroupFromDB($which, $res, $klasse, $fach) {
     global $FAECHER;
     if ($res == null) return;
     $tabindex =  " tabindex='4'";
@@ -139,17 +176,29 @@
     $o .= "<option value='KEIN'>---</option>\n";
     $size = sizeof($res);
     for($i = 0; $i < $size; $i++) {
-      $fachlang = $res[$i][0];
-      if ($which == "faecher") {
-        $fachlang = array_keys($FAECHER, $res[$i][0])[0];
+      $selectedKlasse = "";
+      $selectedFach = "";
+      switch ($which) {
+        case "klassen" :
+          if (strcmp(strtolower($res[$i][0]), strtolower($klasse)) == 0) $selectedKlasse = "selected";
+          $o .= "<option $selectedKlasse value='" . $res[$i][0] . "'>" . $res[$i][0] . "</option>\n";
+          break;
+        case "faecher" :
+          $fachlang = $res[$i][0];
+          if ($fach)
+            if (strcmp($FAECHER[$fach], $res[$i][0]) == 0) $selectedFach = "selected";
+          $fachlang = array_keys($FAECHER, $res[$i][0])[0];
+          $o .= "<option $selectedFach value='" . $fachlang . "'>" . $res[$i][0] . "</option>\n";
+          break;
+        default :
+          $selected = "";
       }
-      $o .= "<option value='" . $fachlang . "'>" . $res[$i][0] . "</option>\n";
     }
     $o .= "</select>\n";
     return $o;
   }
 
-  function populateOptionGroup($which) {
+  function populateOptionGroup($which, $klasse="", $fach="") {
     $d = DB::getInstance();
     if ($d->connect()) {
       switch ($which) {
@@ -164,7 +213,7 @@
       }
       $res = $d->query($q, false, false);
       if ($res) {
-        return getOptionGroupFromDB($which, $res);
+        return getOptionGroupFromDB($which, $res, $klasse, $fach);
       }
     }
   }

@@ -68,6 +68,53 @@ tr:nth-child(even) {
   top: 0;
 }
 
+.meldungform {
+  padding: 0;
+  margin: 0;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: url('transparentbackground.png');
+  opacity: 100%;
+  width: 99.99%;
+  height: 100%;
+}
+
+.deleteform {
+  padding: 0;
+  margin: 0;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: url('transparentbackground.png');
+  opacity: 100%;
+  width: 99.99%;
+  height: 100%;
+  visibility: hidden;
+}
+
+.meldungtable {
+  margin-top: 10%;
+  margin-bottom: 10%;
+  margin-left: auto;
+  margin-right: auto;
+  width: 40%;
+  opacity: 100%;
+  border: 3px solid black;
+}
+
+.meldungtable td {
+  background-color: white;
+  color: black;
+  opacity: 100%;
+}
+
+.meldungtext {
+  text-align: center;
+  font-size: 1.2em;
+  height: 10em;
+}
+
 .eingabe {
   width: 14%;
 }
@@ -90,6 +137,17 @@ tr:nth-child(even) {
 .printtable {
   margin-top: 20px;
   margin-bottom: 20px;
+}
+
+.anleitungtable {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 1.2em;
+}
+
+.anleitungtable td {
+  border: 1px solid darkgray;
+  vertical-align: top;
 }
 
 #buchtitel {
@@ -170,6 +228,10 @@ button {
 
 .color-green {
   background-color: #11ee33;
+}
+
+.fett {
+  font-weight: 800;
 }
 
 @media print {

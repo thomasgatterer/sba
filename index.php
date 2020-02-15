@@ -8,7 +8,7 @@
   $password = "";
 
   // show Login-Form
-  if (! $_POST) {
+  if ((! $_POST) && (in_array($_SERVER['REMOTE_ADDR'], ALLOWEDCLIENTS))) {
     cookieUnset();
     buildHTMLHeader();
     buildLoginForm();
