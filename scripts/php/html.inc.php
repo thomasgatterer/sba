@@ -10,6 +10,7 @@
     $h .= "<meta charset='utf-8'>\n";
     $h .= "<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n";
     $h .= "<meta http-equiv='expires' content='0'>\n";
+    $h .= "<meta name='author' content='Mag. Thomas Neuhold, Februar 2020'>\n";
     $h .= "<link href='scripts/css/sba.css' rel='stylesheet' type='text/css' />";
     $h .= "</head>\n";
     $h .= "<body>\n";
@@ -66,7 +67,7 @@
     print $f;
   }
 
-  function buildEingabeForm($header, $hiddenValue="", $actKlasse="", $actFach="") {
+  function buildEingabeForm($header, $hiddenValue="", $actKlasse="", $actFach="", $actNr=0, $actTitel="", $actPreis=0.0) {
     global $FAECHER;
     global $KLASSEN;
     $f = "<h1>$header</h1>\n";
@@ -77,7 +78,7 @@
     $f .= "<table>\n";
     $f .= "<tr><td colspan='3' class='noborder'>";
     $f .= "<label for='buchtitel'>Titel</label>\n";
-    $f .= "<input type='text' name='buchtitel' id='buchtitel' maxlength='100' tabindex='1'>\n";
+    $f .= "<input type='text' name='buchtitel' id='buchtitel' maxlength='100' tabindex='1' value='$actTitel'>\n";
     $f .= "</td>";
     $f .= "<td class='noborder eingabe'>";
     $f .= "<button type='submit' class='color-yellow' name='buttonAnleitung' id='buttonAnleitung' tabindex='16'>Anleitung</button>";
@@ -92,10 +93,10 @@
     $f .= "</tr>\n";
     $f .= "<tr><td class='noborder eingabe'>";
     $f .= "<label for='buchnummer'>SbNr / ISBN</label><br />\n";
-    $f .= "<input type='text' name='buchnummer' id='buchnummer' maxlength='30' tabindex='2'>\n";
+    $f .= "<input type='text' name='buchnummer' id='buchnummer' maxlength='30' tabindex='2' value=$actNr>\n";
     $f .= "</td><td class='noborder eingabe'>";
     $f .= "<label for='buchpreis'>Preis</label><br />\n";
-    $f .= "<input type='text' name='buchpreis' id='buchpreis' maxlength='30' tabindex='3'>\n";
+    $f .= "<input type='text' name='buchpreis' id='buchpreis' maxlength='30' tabindex='3' value=$actPreis>\n";
     $f .= "</td><td class='noborder eingabe'>";
     $f .= "<label for='faecher'>Fach</label><br />\n";
     $f .= populateOptionGroup("faecher", $actKlasse, $actFach);
@@ -135,7 +136,7 @@
   function getMeldungForm($meldung=null) {
     $f = "<div class='meldungform' name='meldungform' id='meldungform'>\n";
     $f .= "<table class='meldungtable'>\n";
-    $f .= "<tr><th>Meldung</th></tr>\n";
+    $f .= "<tr><th class='color-red'>Meldung</th></tr>\n";
     $f .= "<tr><td class='meldungtext'>$meldung</td></tr>\n";
     $f .= "<tr><td><p style='text-align: center;'>\n";
     $f .= "<button type='button' class='color-green singlebutton' \n" .
@@ -150,7 +151,7 @@
   function getDeleteForm() {
     $f = "<div class='deleteform' name='deleteform' id='deleteform'>\n";
     $f .= "<table class='meldungtable'>\n";
-    $f .= "<tr><th colspan=2>L&ouml;schen</th></tr>\n";
+    $f .= "<tr><th colspan=2 class='color-red'>L&ouml;schen</th></tr>\n";
     $f .= "<tr><td class='meldungtext' colspan=2>Soll der Datensatz gel&ouml;scht werden?</td></tr>\n";
     $f .= "<tr><td style='width:50%; border:0'>\n";
     $f .= "<p style='text-align: center;'><button type='button' class='color-green' \n" .

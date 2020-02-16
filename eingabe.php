@@ -33,7 +33,7 @@
   $actionmode = 1;    // normale Aktion, 2 = delete, 3 = insert (Kombination mit tablemode 2)
   $klasseHidden = ""; // hiddenData value, if search Klasse
 
-  $qFront = "SELECT Nr, Titel, Preis, Fach, Klasse FROM liste ";
+  $qFront = "SELECT Nr, Titel, Preis, Fach, Klasse, Anhang FROM liste ";
   $q = $qFront . "ORDER BY Fach, Titel";
 
   if (isset($_POST['buttonAlles'])) {
@@ -84,10 +84,15 @@
   }
 
   buildHTMLHeader();
-  $actKlasse = (isset($_POST['klassen']) && isset($_POST['buttonKlasse'])) ? $_POST['klassen'] : "";
-  $actFach = (isset($_POST['faecher']) && isset($_POST['buttonFach'])) ? $_POST['faecher'] : "";
+  //$actKlasse = (isset($_POST['klassen']) && isset($_POST['buttonKlasse'])) ? $_POST['klassen'] : "";
+  $actKlasse = (isset($_POST['klassen'])) ? $_POST['klassen'] : "";
+  //$actFach = (isset($_POST['faecher']) && isset($_POST['buttonFach'])) ? $_POST['faecher'] : "";
+  $actFach = (isset($_POST['faecher'])) ? $_POST['faecher'] : "";
+  $actNr = (isset($_POST['buchnummer'])) ? $_POST['buchnummer'] : 0;
+  $actTitel = (isset($_POST['buchtitel'])) ? $_POST['buchtitel'] : "";
+  $actPreis = (isset($_POST['buchpreis'])) ? $_POST['buchpreis'] : 0.0;
   buildEingabeForm("SBA @ AGI, Lehrer/in: " . getCookieUser() .
-    " (" . ACTYEAR . ")", $klasseHidden, $actKlasse, $actFach);
+    " (" . ACTYEAR . ")", $klasseHidden, $actKlasse, $actFach, $actNr, $actTitel, $actPreis);
   switch ($tablemode) {
     case 1 : showNormalTable(); break;
     case 2 : showEigeneTable(); break;

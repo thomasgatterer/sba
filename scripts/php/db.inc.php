@@ -365,10 +365,10 @@
       if (! self::$link) return null;
       if (! $user) return null;
       if (! $nr) return "<p>Bitte Nummer eintragen.</p>\n";
-      if (! $titel) return "<p>Bitte Titel eintragen.</p>\n";;
-      if (! $preis) return "<p>Bitte Preis (mit Kommapunkt) eintragen.</p>\n";;
-      if (($fach === "KEIN") && ! $lh) return "<p>Bitte Fach eintragen.</p>\n";;
-      if (($klasse === "KEIN") && ! $lh) return "<p>Bitte Klasse eintragen.</p>\n";;
+      if (! $titel) return "<p>Bitte Titel eintragen.</p>\n";
+      if (! $preis) return "<p>Bitte Preis (mit Kommapunkt) eintragen.</p>\n";
+      if (($fach === "---") && ! $lh) return "<p>Bitte Fach eintragen.</p>\n";
+      if (($klasse === "KEIN") && ! $lh) return "<p>Bitte Klasse eintragen.</p>\n";
       $meldung = "";
       // Klasse -> lowercase
       if ($klasse != "KEIN") {
@@ -394,6 +394,7 @@
         }
         else {
           $lastIndex = self::getLastID($klasse) + 1;
+          $titel = substr($titel, 0, 39); // Titel auf 39 Zeichen kürzen
           $q = "INSERT INTO $klasse VALUES(" .
             "$lastIndex, $nr, '$titel', $preis, '$fach', 0, '$user', 0, $wv)";
           $res = self::insert($q);
@@ -403,6 +404,9 @@
         }
       }
       // einfügen als Lehrerhandexemplar
+      if ($lh && $fach === "---") {
+        $meldung .= "<p>Bitte Fach w&auml;hlen.</p>\n";
+      }
       if ($lh && $fach != "---") {
         // prüfen, ob LH im heurigen oder letzten Schuljahr erhalten
         $letztesjahr = ACTYEAR - 2000 - 1;
@@ -422,7 +426,7 @@
               "Lehrerhandexemplare angefordert werden.</p>\n";
           }
           else {
-            if ($res['Anhang'] === "ja") {
+            if ($res['Anhang'] == "ja") {
               $meldung .= "<p>Von Titeln aus der Anhangliste k&ouml;nnen " .
                 "keine Lehrerhandexemplare bestellt werden.</p>\n";
             }
@@ -431,6 +435,7 @@
               $res = self::queryOne($q);
               if ($res) {
                 $jahr = ACTYEAR - 2000;
+                $titel = substr($titel, 0, 39); // Titel auf 39 Zeichen kürzen
                 $q = "INSERT INTO lehrerhand VALUES(" .
                   "$lastIndex, $nr, '$titel', '$fach', $jahr, '$user')";
                 $res = self::insert($q);
