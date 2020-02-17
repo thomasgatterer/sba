@@ -14,9 +14,20 @@
 
   // clients allowed
   define ("ALLOWEDCLIENTS", array(
+    // localhost
     "127.0.0.1",
+    // Konferenzzimmer
     "10.1.10.4",
-    "10.1.10.6"
+    "10.1.10.6",
+    "10.1.10.20",
+    "10.1.10.21",
+    "10.1.10.22",
+    "172.25.1.2",
+    "172.25.1.50",
+    "172.25.1.12",
+    "172.25.1.14",
+    // Bibliothek Verwaltungscomputer
+    "10.0.9.3"
   ));
 
   // Fach
@@ -46,10 +57,17 @@
     "PHYSIK" => "PH",
     "RELIGION%EV" => "RE",
     "RELIGION%KATH" => "RK",
+    "RELIGION%ISLAM" => "RI",
     "SPANISCH" => "SP",
     "GEOGRAPHIE%ENGL" => "GWE",
     "BIOLOGIE%ENGL" => "BUE",
-    "ITALIEN%WAHL" => "WIT"
+    "ITALIEN%WAHL" => "WIT",
+    "BERUFSORIENTIERUNG" => "BO",
+    "DARSTELLEND%GEOMETRIE" => "GZ",
+    "GEOMETRISCH%ZEICHNEN" => "GZE",
+    "HAUSHALT" => "HAUS",
+    "CHOR" => "CHOR",
+    "SPORT" => "SK"
   );
 
   $KLASSEN = array(

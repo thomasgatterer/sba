@@ -36,7 +36,7 @@
     $f .= "<label for='password'>Passwort</label>\n";
     $f .= "<input type='password' name='password' id='password' maxlength='10'>\n";
     $f .= "</p><p>\n";
-    $f .= "<button type='submit'>OK</button>\n";
+    $f .= "<button type='submit' class='color-green'>OK</button>\n";
     $f .= "</p>\n";
     $f .= "</form>\n";
     $f .= "</div>\n";

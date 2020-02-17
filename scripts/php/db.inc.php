@@ -396,7 +396,7 @@
           $lastIndex = self::getLastID($klasse) + 1;
           $titel = substr($titel, 0, 39); // Titel auf 39 Zeichen kürzen
           $q = "INSERT INTO $klasse VALUES(" .
-            "$lastIndex, $nr, '$titel', $preis, '$fach', 0, '$user', 0, $wv)";
+            "$lastIndex, $nr, '$titel', $preis, '$fach', NULL, '$user', NULL, $wv)";
           $res = self::insert($q);
           if (! $res) {
             $meldung .= "<p>Fehler beim Einf&uuml;gen des Datensatzes.</p>\n";
