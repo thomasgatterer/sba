@@ -3,20 +3,18 @@
   define ("HOST", "localhost");
   define ("USER", "lehrer");
   define ("PASSWORD", "jon96as12");
-  define ("DATABASE", "sba2019");
+  define ("DATABASE", "sba2020");
 
   // change every year
   define ("YEARPREFIX", "20");
-  define ("ACTYEAR", "2019");
+  define ("ACTYEAR", "2020");
 
   // cookie
   define ("COOKIENAME", "sba");
 
   // clients allowed
   define ("ALLOWEDCLIENTS", array(
-    // localhost
     "127.0.0.1",
-    // Konferenzzimmer
     "10.1.10.4",
     "10.1.10.6",
     "10.1.10.20",
@@ -26,8 +24,9 @@
     "172.25.1.50",
     "172.25.1.12",
     "172.25.1.14",
-    // Bibliothek Verwaltungscomputer
-    "10.0.9.3"
+    "10.0.9.3",
+    "10.4.4.7",
+    "10.0.86.7"
   ));
 
   // Fach
@@ -57,17 +56,10 @@
     "PHYSIK" => "PH",
     "RELIGION%EV" => "RE",
     "RELIGION%KATH" => "RK",
-    "RELIGION%ISLAM" => "RI",
     "SPANISCH" => "SP",
     "GEOGRAPHIE%ENGL" => "GWE",
     "BIOLOGIE%ENGL" => "BUE",
-    "ITALIEN%WAHL" => "WIT",
-    "BERUFSORIENTIERUNG" => "BO",
-    "DARSTELLEND%GEOMETRIE" => "GZ",
-    "GEOMETRISCH%ZEICHNEN" => "GZE",
-    "HAUSHALT" => "HAUS",
-    "CHOR" => "CHOR",
-    "SPORT" => "SK"
+    "ITALIEN%WAHL" => "WIT"
   );
 
   $KLASSEN = array(
