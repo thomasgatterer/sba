@@ -225,8 +225,8 @@
       $q = "SELECT ID FROM $table ORDER BY ID DESC LIMIT 1";
       $res = self::doQuery($q);
       if ($res) {
-        $a = mysqli_fetch_array($res, MYSQLI_NUM);
-        return $a[0];
+//        $a = mysqli_fetch_array($res, MYSQLI_NUM);
+        return $res[0];
       }
       else {
         return 0;
@@ -271,8 +271,9 @@
             $table .= "<td>&nbsp;</td>";
             $table .= "</tr>\n";
           }
+          mysqli_free_result($klassebuch);
         }
-        mysqli_free_result($klassebuch);
+        //mysqli_free_result($klassebuch);
       }
       $q = "SELECT * FROM lehrerhand WHERE Lehrer='$user'";
       $lehrerhand = mysqli_query(self::$link, $q);
@@ -409,11 +410,13 @@
       }
       if ($lh && $fach != "---") {
         // prüfen, ob LH im heurigen oder letzten Schuljahr erhalten
-        $letztesjahr = ACTYEAR - 2000 - 1;
-        $q = "SELECT * FROM lehrerhand WHERE Nr=$nr AND Lehrer='$user' AND Jahr>=$letztesjahr";
-        $res = self::queryOne($q);
+        //$letztesjahr = ACTYEAR - 2000 - 1;
+        //$q = "SELECT * FROM lehrerhand WHERE Nr=$nr AND Lehrer='$user' AND Jahr>=$letztesjahr";
+        $q = "SELECT * FROM lehrerhand WHERE Nr=$nr AND Lehrer='user'";
+        //$res = self::queryOne($q);
+        $res = self::doQuery($q);
         if ($res) {
-          $meldung .= "<p>Der Titel wurde heuer oder im vergangenen Schuljahr " .
+          $meldung .= "<p>Der Titel wurde heuer oder in vergangenen Schuljahren " .
             " bereits als Lehrerhandexemplar erhalten und wird nicht eingef&uuml;gt.</p>\n";
         }
         else {

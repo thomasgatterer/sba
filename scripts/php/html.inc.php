@@ -73,7 +73,8 @@
     $f = "<h1>$header</h1>\n";
     $f .= "<div class='eingabeform no-print'>\n";
     $f .= "<h1>$header</h1>\n";
-    $f .= "<form action='eingabe.php' name='eingabeform' id='eingabeform' method='POST'>\n";
+    $f .= "<form action='eingabe.php' name='eingabeform' id='eingabeform' method='POST' ";
+    $f .= "onkeydown='return event.key != \"Enter\";'>\n";
     $f .= "<input type='hidden' name='hiddenData' id='hiddenData' value='$hiddenValue'>\n";
     $f .= "<table>\n";
     $f .= "<tr><td colspan='3' class='noborder'>";
