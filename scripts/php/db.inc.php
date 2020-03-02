@@ -225,8 +225,8 @@
       $q = "SELECT ID FROM $table ORDER BY ID DESC LIMIT 1";
       $res = self::doQuery($q);
       if ($res) {
-//        $a = mysqli_fetch_array($res, MYSQLI_NUM);
-        return $res[0];
+        $a = mysqli_fetch_array($res, MYSQLI_NUM);
+        return $a[0];
       }
       else {
         return 0;
@@ -385,13 +385,13 @@
         $titel = "UeW " . $titel;
       }
       // alle Felder ausgefüllt -> einfügen in 1a .. 8d
-      if ($fach && $klasse && ! $lh) {
+      if ($fach && $klasse) { // neu && ! $lh gestrichen
         // bereits eingefügt? Wenn nicht, dann weiter
         $q = "SELECT * FROM $klasse WHERE Nr=$nr AND Lehrer='$user'";
         $res = self::queryOne($q);
         if ($res) {
           $meldung .= "<p>Der Titel</p><p>\"" . $res['Titel'] . "\"</p><p> ist bereits in der Klasse $klasse " .
-            "vorhanden und wird nicht eingef&uuml;gt.</p>\n";
+            "und f&uuml;r Lehrer/in $user vorhanden und wird nicht eingef&uuml;gt.</p>\n";
         }
         else {
           $lastIndex = self::getLastID($klasse) + 1;
@@ -415,7 +415,7 @@
         $q = "SELECT * FROM lehrerhand WHERE Nr=$nr AND Lehrer='user'";
         //$res = self::queryOne($q);
         $res = self::doQuery($q);
-        if ($res) {
+        if ($res === false) {
           $meldung .= "<p>Der Titel wurde heuer oder in vergangenen Schuljahren " .
             " bereits als Lehrerhandexemplar erhalten und wird nicht eingef&uuml;gt.</p>\n";
         }

@@ -91,8 +91,8 @@
   $actNr = (isset($_POST['buchnummer'])) ? $_POST['buchnummer'] : 0;
   $actTitel = (isset($_POST['buchtitel'])) ? $_POST['buchtitel'] : "";
   $actPreis = (isset($_POST['buchpreis'])) ? $_POST['buchpreis'] : 0.0;
-  buildEingabeForm("SBA @ AGI, Lehrer/in: " . getCookieUser() .
-    " (" . ACTYEAR . ")", $klasseHidden, $actKlasse, $actFach, $actNr, $actTitel, $actPreis);
+  buildEingabeForm("SBA@AGI ::: " . getCookieUser() .
+    " (" . ACTYEAR . "/" . (ACTYEAR + 1 - 2000) . ")", $klasseHidden, $actKlasse, $actFach, $actNr, $actTitel, $actPreis);
   switch ($tablemode) {
     case 1 : showNormalTable(); break;
     case 2 : showEigeneTable(); break;

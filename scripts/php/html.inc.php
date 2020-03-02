@@ -17,7 +17,7 @@
     print $h;
   }
 
-  function buildHeader($h = "<h1>SBA @ AGI</h1>\n") {
+  function buildHeader($h = "<h1>SBA@AGI</h1>\n") {
     print $h;
   }
 

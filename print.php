@@ -12,7 +12,7 @@ if (! cookieIsValid()) {
 }
 
 buildHTMLHeader();
-print "<h1>SBA @ AGI, Lehrer/in: " . getCookieUser() . " (" . ACTYEAR . ")</h1>";
+print "<h1>SBA@AGI ::: " . getCookieUser() . " (" . ACTYEAR . "/" . (ACTYEAR + 1 - 2000) . ")</h1>";
 if (isset($_GET['klasse'])) {
   showKlasseTable($_GET['klasse']);
 }
@@ -20,7 +20,8 @@ else {
   showEigeneTable();
 }
 
-print "\n<p style='text-align: center;'><button type='button' class='singlebutton no-print color-blue' " .
+print "\n<p style='text-align: center;' class='no-print'>Zum Drucken die Druckfunktion des Browsers verwenden (STRG-P).</p>\n";
+print "\n<p style='text-align: center;'><button type='button' class='singlebutton no-print color-green' " .
   "onclick='window.location.href=\"eingabe.php?modus=eigene\";'>Zur&uuml;ck</button></p>";
 print "<p>&nbsp;</p>";
 buildHTMLFooter();
