@@ -104,7 +104,7 @@
       <td>Ankreuzen, wenn ein Handexemplar gew&uuml;nscht wird.
         Handexemplare k&ouml;nnen nur eingegeben werden, wenn folgende Bedingungen erf&uuml;llt sind:
         <ul>
-          <li>Titel nicht in der Anhangliste</li>
+          <li>Titel nicht in der Anhangliste (in der Spalte Anhang gekennzeichnet mit ja)</li>
           <li>Titel kein Unterrichtsmittel eigener Wahl (UeW)</li>
         </ul>
       </td>
