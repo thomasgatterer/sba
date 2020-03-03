@@ -55,7 +55,7 @@
           <li>Wiederverwendung, wenn Exemplare zur Wiederverwendung vorhanden sind,
             sonst den Wert 0 eintragen (ist bereits voreingestellt).
           </li>
-          <li>Checkbox Handexemplar(LH), wenn das Handexemplar gel&ouml;scht werden soll</li>
+          <li>Checkbox Handexemplar(LH), wenn ein Handexemplar zus&auml;tzlich gew&uuml;nscht wird.</li>
           <li>Checkbox UeW (Unterrichtsmittel eigener Wahl),
             wenn ein Titel nicht in der Schulbuchliste vorhanden ist.
             Als Nummer muss eine g&uuml;ltige ISBN-Nummer (10 bzw. 13 Ziffern)
