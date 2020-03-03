@@ -405,17 +405,17 @@
         }
       }
       // einfügen als Lehrerhandexemplar
-      if ($lh && $fach === "---") {
+      if ($lh === true && $fach === "---") {
         $meldung .= "<p>Bitte Fach w&auml;hlen.</p>\n";
       }
-      if ($lh && $fach != "---") {
+      if ($lh === true && $fach != "---") {
         // prüfen, ob LH im heurigen oder letzten Schuljahr erhalten
         //$letztesjahr = ACTYEAR - 2000 - 1;
         //$q = "SELECT * FROM lehrerhand WHERE Nr=$nr AND Lehrer='$user' AND Jahr>=$letztesjahr";
         $q = "SELECT * FROM lehrerhand WHERE Nr=$nr AND Lehrer='user'";
-        //$res = self::queryOne($q);
-        $res = self::doQuery($q);
-        if (mysqli_num_rows($res) >= 1) {
+        $res = self::queryOne($q);
+        //$res = self::doQuery($q);
+        if ($res != false) {
           $meldung .= "<p>Der Titel wurde heuer oder in vergangenen Schuljahren " .
             " bereits als Lehrerhandexemplar erhalten und wird nicht eingef&uuml;gt.</p>\n";
         }
@@ -429,7 +429,7 @@
               "Lehrerhandexemplare angefordert werden.</p>\n";
           }
           else {
-            if ($res['Anhang'] == "ja") {
+            if ($res['Anhang'] === "ja") {
               $meldung .= "<p>Von Titeln aus der Anhangliste k&ouml;nnen " .
                 "keine Lehrerhandexemplare bestellt werden.</p>\n";
             }
@@ -442,7 +442,7 @@
                 $q = "INSERT INTO lehrerhand VALUES(" .
                   "$lastIndex, $nr, '$titel', '$fach', $jahr, '$user')";
                 $res = self::insert($q);
-                if (! $res) {
+                if ($res != true) {
                   $meldung .= "<p>Fehler beim Einf&uuml;gen des Lehrerhandexemplars.</p>\n";
                 }
               }
