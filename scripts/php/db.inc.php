@@ -247,7 +247,7 @@
       if ($printing) {
         $table = "<table class='printtable'>\n";
       }
-      $table .= "<tr><th>Nr</th><th>Titel</th><th>Preis</th><th>Fach</th>" .
+      $table .= "<tr><th>Nr</th><th>Titel</th><th>Preis/LH</th><th>Fach</th>" .
         "<th>Anzahl</th><th>Wert</th><th>Klasse</th><th>Jahr(LH)</th></tr>\n";
       foreach($kl as $k) {
         $q = "SELECT * FROM " . strtolower($k) . " WHERE Lehrer='$user'";
@@ -395,7 +395,7 @@
         }
         else {
           $lastIndex = self::getLastID($klasse) + 1;
-          $titel = substr($titel, 0, 39); // Titel auf 39 Zeichen kürzen
+          // $titel = substr($titel, 0, 60); // Titel auf 60 Zeichen kürzen
           $q = "INSERT INTO $klasse VALUES(" .
             "$lastIndex, $nr, '$titel', $preis, '$fach', NULL, '$user', NULL, $wv)";
           $res = self::insert($q);
@@ -415,7 +415,7 @@
         $q = "SELECT * FROM lehrerhand WHERE Nr=$nr AND Lehrer='user'";
         //$res = self::queryOne($q);
         $res = self::doQuery($q);
-        if ($res === false) {
+        if (mysqli_num_rows($res) >= 1) {
           $meldung .= "<p>Der Titel wurde heuer oder in vergangenen Schuljahren " .
             " bereits als Lehrerhandexemplar erhalten und wird nicht eingef&uuml;gt.</p>\n";
         }
@@ -423,7 +423,7 @@
           $lastIndex = self::getLastID("lehrerhand") + 1;
           $q = "SELECT * FROM liste WHERE Nr=$nr";
           $res = self::queryOne($q);
-          if (! $res) {
+          if ($res === false) {
             $meldung .= "<p>Der Titel ist in der Schulbuchliste nicht enthalten. " .
               "Von Unterrichtsmitteln eigener Wahl (UeW) k&ouml;nnen keine " .
               "Lehrerhandexemplare angefordert werden.</p>\n";
@@ -436,9 +436,9 @@
             else {
               $q = "SELECT * FROM liste WHERE Nr=$nr";
               $res = self::queryOne($q);
-              if ($res) {
+              if ($res != false) {
                 $jahr = ACTYEAR - 2000;
-                $titel = substr($titel, 0, 39); // Titel auf 39 Zeichen kürzen
+                // $titel = substr($titel, 0, 60); // Titel auf 60 Zeichen kürzen
                 $q = "INSERT INTO lehrerhand VALUES(" .
                   "$lastIndex, $nr, '$titel', '$fach', $jahr, '$user')";
                 $res = self::insert($q);
