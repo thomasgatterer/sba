@@ -226,7 +226,11 @@
       $res = self::doQuery($q);
       if ($res) {
         $a = mysqli_fetch_array($res, MYSQLI_NUM);
-        return $a[0];
+        if ($a != null) {
+          return $a[0];
+        }
+        else
+          return 0;
       }
       else {
         return 0;
@@ -389,7 +393,7 @@
         // bereits eingefügt? Wenn nicht, dann weiter
         $q = "SELECT * FROM $klasse WHERE Nr=$nr AND Lehrer='$user'";
         $res = self::queryOne($q);
-        if ($res) {
+        if ($res != false) {
           $meldung .= "<p>Der Titel</p><p>\"" . $res['Titel'] . "\"</p><p> ist bereits in der Klasse $klasse " .
             "und f&uuml;r Lehrer/in $user vorhanden und wird nicht eingef&uuml;gt.</p>\n";
         }
@@ -412,7 +416,7 @@
         // prüfen, ob LH im heurigen oder letzten Schuljahr erhalten
         //$letztesjahr = ACTYEAR - 2000 - 1;
         //$q = "SELECT * FROM lehrerhand WHERE Nr=$nr AND Lehrer='$user' AND Jahr>=$letztesjahr";
-        $q = "SELECT * FROM lehrerhand WHERE Nr=$nr AND Lehrer='user'";
+        $q = "SELECT * FROM lehrerhand WHERE Nr=$nr AND Lehrer='$user'";
         $res = self::queryOne($q);
         //$res = self::doQuery($q);
         if ($res != false) {
