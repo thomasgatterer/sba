@@ -179,6 +179,15 @@ input[type=password] {
   width: 90%;
 }
 
+input[type=checkbox] {
+  -ms-transform: scale(1.5);
+  -moz-transform: scale(1.5);
+  -webkit-transform: scale(1.5);
+  -o-transform: scale(1.5);
+  transform: scale(1.5);
+  padding: 5px;
+}
+
 select {
   border: 1px solid black;
   padding: .2em;
@@ -232,6 +241,10 @@ button {
 
 .fett {
   font-weight: 800;
+}
+
+.inputcenter {
+  text-align: center;
 }
 
 @media print {

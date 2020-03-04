@@ -94,10 +94,10 @@
     $f .= "</tr>\n";
     $f .= "<tr><td class='noborder eingabe'>";
     $f .= "<label for='buchnummer'>SbNr / ISBN</label><br />\n";
-    $f .= "<input type='text' name='buchnummer' id='buchnummer' maxlength='30' tabindex='2' value=$actNr>\n";
+    $f .= "<input type='text' class='inputcenter' name='buchnummer' id='buchnummer' maxlength='30' tabindex='2' value=$actNr>\n";
     $f .= "</td><td class='noborder eingabe'>";
     $f .= "<label for='buchpreis'>Preis</label><br />\n";
-    $f .= "<input type='text' name='buchpreis' id='buchpreis' maxlength='30' tabindex='3' value=$actPreis>\n";
+    $f .= "<input type='text' class='inputcenter' name='buchpreis' id='buchpreis' maxlength='30' tabindex='3' value=$actPreis>\n";
     $f .= "</td><td class='noborder eingabe'>";
     $f .= "<label for='faecher'>Fach</label><br />\n";
     $f .= populateOptionGroup("faecher", $actKlasse, $actFach);
@@ -106,7 +106,7 @@
     $f .= populateOptionGroup("klassen", $actKlasse, $actFach);
     $f .= "</td><td class='noborder eingabe'>";
     $f .= "<label for='wiederverwendung'>Wiederverwendung</label><br />\n";
-    $f .= "<input type='text' name='wiederverwendung' id='wiederverwendung' maxlength='30' value='0' tabindex='6'>\n";
+    $f .= "<input type='text' class='inputcenter' name='wiederverwendung' id='wiederverwendung' maxlength='30' value='0' tabindex='6'>\n";
     $f .= "</td><td class='noborder eingabe'>";
     $f .= "Handexemplar(LH)<br /><input type='checkbox' name='lehrerhand' id='lehrerhand' value='cbLH' tabindex='7'>\n";
     $f .= "</td><td class='noborder eingabe'>";
